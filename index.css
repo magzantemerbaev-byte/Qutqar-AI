@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-navy-900 text-slate-800 font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid #F79009;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card { @apply bg-white rounded-lg border border-slate-200/80 shadow-[0_1px_2px_rgba(6,16,31,.06),0_4px_16px_-8px_rgba(6,16,31,.18)]; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed; }
+  .btn-primary { @apply btn bg-signal-red text-white hover:bg-red-700; }
+  .btn-navy { @apply btn bg-navy-800 text-white hover:bg-navy-700; }
+  .btn-ghost { @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50; }
+  .input {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400
+      focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-500/20;
+  }
+  .label { @apply mb-1 block text-xs font-semibold text-slate-600; }
+  .section-title { @apply font-cond text-lg font-semibold tracking-wide text-slate-900; }
+  .eyebrow { @apply text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500; }
+}
+
+/* Map markers */
+.kz-marker {
+  position: relative; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff; box-shadow: 0 2px 6px rgba(6, 16, 31, .45);
+  font-size: 16px; line-height: 1; cursor: pointer;
+  transition: transform .15s ease;
+}
+.kz-marker.is-selected {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px rgba(247, 144, 9, .55), 0 2px 8px rgba(6, 16, 31, .5);
+}
+.kz-marker.is-incident::after {
+  content: ''; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid currentColor; opacity: .5;
+}
+.leaflet-container { font-family: inherit; background: #dfe6ee; }
+.leaflet-tooltip { font-family: inherit; font-size: 12px; }
+
+/* ── Анимации и состояния ── */
+@keyframes pulse-soft { 0%, 100% { opacity: 1 } 50% { opacity: .6 } }
+.animate-pulse-soft { animation: pulse-soft 1.6s ease-in-out infinite; }
+@keyframes ping-ring { 0% { transform: scale(1); opacity: .7 } 100% { transform: scale(2.4); opacity: 0 } }
+.status-dot { position: relative; display: inline-block; width: 8px; height: 8px; border-radius: 9999px; }
+.status-dot.is-live::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: ping-ring 1.8s ease-out infinite; }
+@keyframes shimmer { 0% { background-position: -400px 0 } 100% { background-position: 400px 0 } }
+.skeleton { background: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 40%, #e2e8f0 80%); background-size: 800px 100%; animation: shimmer 1.4s linear infinite; }
+@keyframes flash-in { 0% { background-color: rgba(247, 144, 9, .25) } 100% { background-color: transparent } }
+.flash-in { animation: flash-in 1.6s ease-out; }
+@keyframes pop-in { 0% { opacity: 0; transform: translateY(6px) scale(.98) } 100% { opacity: 1; transform: none } }
+.pop-in { animation: pop-in .35s ease-out both; }
+@keyframes alert-border { 0%, 100% { box-shadow: inset 0 0 0 2px rgba(217, 45, 32, .9) } 50% { box-shadow: inset 0 0 0 2px rgba(217, 45, 32, .25) } }
+.alert-border { animation: alert-border 1.4s ease-in-out infinite; }
+
+/* DEMO MODE: диагональная штриховка баннера и водяной знак, чтобы демо нельзя было спутать с реальными данными */
+.demo-stripes { background-image: repeating-linear-gradient(-45deg, #F79009 0 14px, #1a1204 14px 28px); }
+[data-watermark]::before {
+  content: attr(data-watermark); position: fixed; right: 18px; bottom: 14px; z-index: 900; pointer-events: none;
+  font: 700 11px/1 "IBM Plex Sans Condensed", sans-serif; letter-spacing: .08em; color: #F79009;
+  background: rgba(6, 16, 31, .85); border: 1px solid rgba(247, 144, 9, .6); padding: 6px 9px; border-radius: 4px;
+}
+.kz-marker.is-large { width: 44px; height: 44px; font-size: 21px; }
+
+/* ── Визуальная система: таблицы, данные, печать ── */
+.data-table { @apply w-full text-sm; }
+.data-table thead th { @apply bg-slate-50 px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500; }
+.data-table tbody td { @apply border-t border-slate-100 px-3 py-2 align-top; }
+.data-table tbody tr:hover { @apply bg-slate-50/70; }
+.tag { @apply inline-flex items-center rounded px-1.5 py-0.5 text-[11px] font-semibold; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Scrollbars */
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgba(143, 163, 191, .45); border-radius: 4px; }
+
+/* Print: только область отчета */
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  html, body, #root, main, #root > div, #root > div > div {
+    height: auto !important; overflow: visible !important; display: block !important; background: #fff !important;
+  }
+  body * { visibility: hidden; }
+  #print-area, #print-area * { visibility: visible; }
+  #print-area {
+    position: absolute; left: 0; top: 0; width: 100%;
+    box-shadow: none !important; border: none !important; padding: 0 !important;
+  }
+  .no-print { display: none !important; }
+}
+
+@keyframes pr-progress { from { width: 0 } to { width: 100% } }

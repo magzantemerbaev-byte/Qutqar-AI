@@ -1,0 +1,6 @@
+# Публичная сборка — только фронтенд (DEMO MODE). Backend разворачивается отдельно при необходимости.
+server/data
+server/node_modules
+server/dist
+node_modules
+dist
